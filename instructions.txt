@@ -1,0 +1,20 @@
+-- this project is an ecommerce frontend project
+
+-- the backend exits on this path "/Users/princedarko/Desktop/main/tickets/java/ecommerce"
+
+-- the backend is the true status
+
+-- please take time to go through the backend their endpoints and everthing
+
+-- there's a functionality.md file which even gives a summary
+
+-- now i want you to modify the ui to match the endpoints
+
+
+-- dont change the ui per say, i love the current design
+
+-- for instance the dashboard let it match the response from the /api/admin/dashboard
+
+-- so try and make the backend response match the ui that's what i mean
+
+-- the project has been deployed this is prod url (https://ecommerce-backend-production-bab1.up.railway.app/)

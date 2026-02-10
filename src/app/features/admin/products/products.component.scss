@@ -1,0 +1,106 @@
+.products-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--p-text-color);
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    color: var(--p-text-secondary-color);
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.product-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .product-title {
+    font-weight: 600;
+    color: var(--p-text-color);
+  }
+
+  .product-desc {
+    font-size: 0.875rem;
+    color: var(--p-text-secondary-color);
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.low-stock {
+  color: var(--p-orange-500);
+  font-weight: 500;
+
+  i {
+    margin-left: 0.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+
+  i {
+    font-size: 3rem;
+    color: var(--p-text-secondary-color);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--p-text-secondary-color);
+  }
+}
+
+// Dialog form styles
+.form-field {
+  margin-bottom: 1.25rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--p-text-color);
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}

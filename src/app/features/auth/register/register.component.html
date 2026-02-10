@@ -1,0 +1,129 @@
+<div class="register-container">
+  <p-card class="register-card">
+    <div class="register-header">
+      <div class="logo">
+        <i class="pi pi-heart-fill"></i>
+        <span>TOMATO</span>
+      </div>
+      <h2>Create Account</h2>
+      <p>Join us and start shopping</p>
+    </div>
+
+    @if (errorMessage) {
+      <p-message severity="error" [text]="errorMessage" styleClass="w-full mb-3"></p-message>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="firstName">First Name</label>
+          <input
+            pInputText
+            id="firstName"
+            formControlName="firstName"
+            placeholder="First name"
+            [class.ng-invalid]="firstName?.invalid && firstName?.touched"
+          />
+          @if (firstName?.invalid && firstName?.touched) {
+            <small class="p-error">
+              @if (firstName?.errors?.['required']) {
+                First name is required
+              } @else if (firstName?.errors?.['minlength']) {
+                Min 2 characters
+              }
+            </small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="lastName">Last Name</label>
+          <input
+            pInputText
+            id="lastName"
+            formControlName="lastName"
+            placeholder="Last name"
+            [class.ng-invalid]="lastName?.invalid && lastName?.touched"
+          />
+          @if (lastName?.invalid && lastName?.touched) {
+            <small class="p-error">
+              @if (lastName?.errors?.['required']) {
+                Last name is required
+              } @else if (lastName?.errors?.['minlength']) {
+                Min 2 characters
+              }
+            </small>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          [class.ng-invalid]="email?.invalid && email?.touched"
+        />
+        @if (email?.invalid && email?.touched) {
+          <small class="p-error">
+            @if (email?.errors?.['required']) {
+              Email is required
+            } @else if (email?.errors?.['email']) {
+              Please enter a valid email
+            }
+          </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          placeholder="Create a password"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        ></p-password>
+        @if (password?.invalid && password?.touched) {
+          <small class="p-error">
+            @if (password?.errors?.['required']) {
+              Password is required
+            } @else if (password?.errors?.['minlength']) {
+              Password must be at least 6 characters
+            }
+          </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="confirmPassword">Confirm Password</label>
+        <p-password
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          [toggleMask]="true"
+          [feedback]="false"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        ></p-password>
+        @if (confirmPassword?.invalid && confirmPassword?.touched) {
+          <small class="p-error">Please confirm your password</small>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Create Account"
+        icon="pi pi-user-plus"
+        styleClass="w-full btn-tomato"
+        [loading]="loading"
+      ></p-button>
+    </form>
+
+    <div class="register-footer">
+      <p>Already have an account? <a routerLink="/auth/login">Sign In</a></p>
+    </div>
+  </p-card>
+</div>

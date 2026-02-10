@@ -1,0 +1,137 @@
+@import 'primeflex/primeflex.css';
+@import 'primeicons/primeicons.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--p-font-family);
+  background-color: var(--p-surface-ground);
+  color: var(--p-text-color);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// Custom theme variables
+:root {
+  --tomato-primary: #e74c3c;
+  --tomato-primary-dark: #c0392b;
+  --header-height: 60px;
+  --bottom-nav-height: 70px;
+}
+
+// Main content wrapper
+.main-content {
+  min-height: calc(100vh - var(--header-height));
+  padding: 1rem;
+
+  @media (max-width: 768px) {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 1.5rem);
+  }
+}
+
+// Card styling
+.product-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Custom button styles
+.btn-tomato {
+  background-color: var(--tomato-primary) !important;
+  border-color: var(--tomato-primary) !important;
+
+  &:hover {
+    background-color: var(--tomato-primary-dark) !important;
+    border-color: var(--tomato-primary-dark) !important;
+  }
+}
+
+// Responsive utilities
+.hide-mobile {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.hide-desktop {
+  @media (min-width: 769px) {
+    display: none !important;
+  }
+}
+
+// Form styling
+.form-field {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .p-inputtext, .p-password, .p-dropdown, .p-inputmask {
+    width: 100%;
+  }
+}
+
+// Dashboard stats card
+.stat-card {
+  text-align: center;
+  padding: 1.5rem;
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--p-primary-color);
+  }
+
+  .stat-label {
+    color: var(--p-text-secondary-color);
+    margin-top: 0.5rem;
+  }
+}
+
+// Price styling
+.price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--tomato-primary);
+}
+
+// Loading spinner container
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+  min-height: 300px;
+}
+
+// Cart badge
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--tomato-primary);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}

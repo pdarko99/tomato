@@ -1,0 +1,7 @@
+@if (isLoggedIn) {
+  <app-responsive-nav></app-responsive-nav>
+}
+
+<main [class.main-content]="isLoggedIn" [class.with-header]="isLoggedIn">
+  <router-outlet></router-outlet>
+</main>

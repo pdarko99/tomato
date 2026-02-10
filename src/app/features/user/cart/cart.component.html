@@ -1,0 +1,116 @@
+<div class="cart-container">
+  <div class="page-header">
+    <h1>Shopping Cart</h1>
+    <p>{{ cartService.cartCount() }} items in your cart</p>
+  </div>
+
+  @if (cartService.cartItems().length > 0) {
+    <div class="cart-layout">
+      <div class="cart-items">
+        @for (item of cartService.cartItems(); track item.product.id) {
+          <p-card class="cart-item-card">
+            <div class="cart-item">
+              <img [src]="item.product.productUrl" [alt]="item.product.title" class="item-image" />
+
+              <div class="item-details">
+                <h3>{{ item.product.title }}</h3>
+                <p class="item-price">${{ item.product.price.toFixed(2) }} each</p>
+              </div>
+
+              <div class="quantity-control">
+                <p-inputNumber
+                  [(ngModel)]="item.quantity"
+                  [showButtons]="true"
+                  buttonLayout="horizontal"
+                  [min]="1"
+                  [max]="item.product.quantity"
+                  decrementButtonClass="p-button-secondary"
+                  incrementButtonClass="p-button-secondary"
+                  incrementButtonIcon="pi pi-plus"
+                  decrementButtonIcon="pi pi-minus"
+                  (onInput)="updateQuantity(item.product.id, $event.value || 1)"
+                ></p-inputNumber>
+              </div>
+
+              <div class="item-total">
+                <span class="price">${{ getItemTotal(item).toFixed(2) }}</span>
+              </div>
+
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+                (onClick)="removeItem(item.product.id)"
+              ></p-button>
+            </div>
+          </p-card>
+        }
+
+        <div class="cart-actions">
+          <p-button
+            label="Continue Shopping"
+            icon="pi pi-arrow-left"
+            [text]="true"
+            (onClick)="continueShopping()"
+          ></p-button>
+          <p-button
+            label="Clear Cart"
+            icon="pi pi-trash"
+            [text]="true"
+            severity="danger"
+            (onClick)="clearCart()"
+          ></p-button>
+        </div>
+      </div>
+
+      <div class="cart-summary">
+        <p-card>
+          <ng-template #header>
+            <div class="summary-header">
+              <h3>Order Summary</h3>
+            </div>
+          </ng-template>
+
+          <div class="summary-content">
+            <div class="summary-row">
+              <span>Subtotal ({{ cartService.cartCount() }} items)</span>
+              <span>${{ cartService.cartTotal().toFixed(2) }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span class="free">FREE</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax</span>
+              <span>${{ (cartService.cartTotal() * 0.08).toFixed(2) }}</span>
+            </div>
+            <p-divider></p-divider>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span class="price">${{ (cartService.cartTotal() * 1.08).toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <p-button
+            label="Proceed to Checkout"
+            icon="pi pi-credit-card"
+            styleClass="w-full btn-tomato mt-3"
+            (onClick)="proceedToCheckout()"
+          ></p-button>
+        </p-card>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-cart">
+      <i class="pi pi-shopping-cart"></i>
+      <h2>Your cart is empty</h2>
+      <p>Looks like you haven't added anything to your cart yet.</p>
+      <p-button
+        label="Start Shopping"
+        icon="pi pi-shopping-bag"
+        styleClass="btn-tomato"
+        (onClick)="continueShopping()"
+      ></p-button>
+    </div>
+  }
+</div>

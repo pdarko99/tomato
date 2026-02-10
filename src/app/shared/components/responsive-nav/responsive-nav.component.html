@@ -1,0 +1,117 @@
+<!-- Desktop Header -->
+<header class="desktop-header hide-mobile">
+  <div class="header-content">
+    <div class="logo" routerLink="/home">
+      <i class="pi pi-heart-fill logo-icon"></i>
+      <span class="logo-text">TOMATO</span>
+    </div>
+
+    <nav class="nav-links">
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin/dashboard" routerLinkActive="active">
+          <i class="pi pi-chart-bar"></i>
+          Dashboard
+        </a>
+        <a routerLink="/admin/products" routerLinkActive="active">
+          <i class="pi pi-box"></i>
+          Products
+        </a>
+        <a routerLink="/admin/categories" routerLinkActive="active">
+          <i class="pi pi-tags"></i>
+          Categories
+        </a>
+      } @else {
+        <a routerLink="/home" routerLinkActive="active">
+          <i class="pi pi-home"></i>
+          Home
+        </a>
+        <a routerLink="/cart" routerLinkActive="active" class="cart-link">
+          <i class="pi pi-shopping-cart"></i>
+          Cart
+          @if (cartService.cartCount() > 0) {
+            <span class="cart-badge">{{ cartService.cartCount() }}</span>
+          }
+        </a>
+        <a routerLink="/orders" routerLinkActive="active">
+          <i class="pi pi-list"></i>
+          Orders
+        </a>
+      }
+    </nav>
+
+    <div class="user-section">
+      @if (authService.isLoggedIn()) {
+        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+        <div class="user-info" (click)="menu.toggle($event)">
+          <p-avatar [image]="userAvatar()" shape="circle" size="normal"></p-avatar>
+          <span class="user-name">{{ userName() }}</span>
+          <i class="pi pi-chevron-down"></i>
+        </div>
+      } @else {
+        <p-button label="Login" icon="pi pi-sign-in" [text]="true" (onClick)="navigateTo('/auth/login')"></p-button>
+        <p-button label="Register" icon="pi pi-user-plus" (onClick)="navigateTo('/auth/register')"></p-button>
+      }
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Top Header -->
+<header class="mobile-header hide-desktop">
+  <div class="logo" routerLink="/home">
+    <i class="pi pi-heart-fill logo-icon"></i>
+    <span class="logo-text">TOMATO</span>
+  </div>
+</header>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="mobile-nav hide-desktop">
+  @if (authService.isLoggedIn()) {
+    @if (authService.isAdmin()) {
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-chart-bar"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-box"></i>
+        <span>Products</span>
+      </a>
+      <a routerLink="/admin/categories" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-tags"></i>
+        <span>Categories</span>
+      </a>
+      <a routerLink="/admin/settings" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-cog"></i>
+        <span>Settings</span>
+      </a>
+    } @else {
+      <a routerLink="/home" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-home"></i>
+        <span>Home</span>
+      </a>
+      <a routerLink="/cart" routerLinkActive="active" class="nav-item cart-item">
+        <i class="pi pi-shopping-cart"></i>
+        @if (cartService.cartCount() > 0) {
+          <span class="mobile-cart-badge">{{ cartService.cartCount() }}</span>
+        }
+        <span>Cart</span>
+      </a>
+      <a routerLink="/orders" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-list"></i>
+        <span>Orders</span>
+      </a>
+      <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-user"></i>
+        <span>Profile</span>
+      </a>
+    }
+  } @else {
+    <a routerLink="/auth/login" routerLinkActive="active" class="nav-item">
+      <i class="pi pi-sign-in"></i>
+      <span>Login</span>
+    </a>
+    <a routerLink="/auth/register" routerLinkActive="active" class="nav-item">
+      <i class="pi pi-user-plus"></i>
+      <span>Register</span>
+    </a>
+  }
+</nav>

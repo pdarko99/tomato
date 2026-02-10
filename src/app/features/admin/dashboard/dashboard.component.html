@@ -1,0 +1,127 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Welcome back! Here's an overview of your store.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+    </div>
+  } @else {
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-icon products">
+          <i class="pi pi-box"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats().totalProducts }}</span>
+          <span class="stat-label">Total Products</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-icon orders">
+          <i class="pi pi-shopping-cart"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats().totalOrders }}</span>
+          <span class="stat-label">Total Orders</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-icon revenue">
+          <i class="pi pi-dollar"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">${{ stats().totalRevenue.toFixed(2) }}</span>
+          <span class="stat-label">Total Revenue</span>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-icon pending">
+          <i class="pi pi-clock"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats().pendingOrders }}</span>
+          <span class="stat-label">Pending Orders</span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-grid">
+    <p-card>
+      <ng-template #header>
+        <div class="card-header">
+          <h3>Sales Overview</h3>
+        </div>
+      </ng-template>
+      <div class="chart-container">
+        <p-chart type="line" [data]="salesChartData" [options]="salesChartOptions"></p-chart>
+      </div>
+    </p-card>
+
+    <p-card>
+      <ng-template #header>
+        <div class="card-header">
+          <h3>Products by Category</h3>
+        </div>
+      </ng-template>
+      <div class="chart-container pie-chart">
+        <p-chart type="doughnut" [data]="categoryChartData" [options]="categoryChartOptions"></p-chart>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Recent Orders -->
+  <p-card>
+    <ng-template #header>
+      <div class="card-header">
+        <h3>Recent Orders</h3>
+      </div>
+    </ng-template>
+
+    <p-table [value]="recentOrders()" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template #header>
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-order>
+        <tr>
+          <td><span class="order-id">#{{ order.orderId }}</span></td>
+          <td>{{ formatDate(order.createdAt) }}</td>
+          <td>{{ order.itemCount }} item(s)</td>
+          <td><span class="price">${{ order.totalAmount.toFixed(2) }}</span></td>
+          <td>
+            <p-tag [value]="order.status" [severity]="getStatusSeverity(order.status)"></p-tag>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5" class="text-center p-4">No orders yet</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  }
+</div>

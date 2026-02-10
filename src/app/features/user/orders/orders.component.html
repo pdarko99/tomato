@@ -1,0 +1,126 @@
+<div class="orders-container">
+  <div class="page-header">
+    <h1>Order History</h1>
+    <p>View and track your orders</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+    </div>
+  } @else if (orders().length > 0) {
+    <p-card>
+      <p-table
+        [value]="orders()"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 25]"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template #header>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-order>
+          <tr>
+            <td>
+              <span class="order-id">#{{ order.id }}</span>
+            </td>
+            <td>{{ formatDate(order.createdAt) }}</td>
+            <td>{{ order.items.length }} item(s)</td>
+            <td>
+              <span class="price">${{ order.total.toFixed(2) }}</span>
+            </td>
+            <td>
+              <p-tag [value]="order.status" [severity]="getStatusSeverity(order.status)"></p-tag>
+            </td>
+            <td>
+              <p-button
+                icon="pi pi-eye"
+                [text]="true"
+                label="View"
+                (onClick)="viewOrderDetails(order)"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="6" class="text-center p-4">
+              No orders found
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  } @else {
+    <div class="empty-state">
+      <i class="pi pi-shopping-bag"></i>
+      <h2>No orders yet</h2>
+      <p>When you place orders, they will appear here.</p>
+      <p-button
+        label="Start Shopping"
+        icon="pi pi-shopping-cart"
+        styleClass="btn-tomato"
+        routerLink="/home"
+      ></p-button>
+    </div>
+  }
+</div>
+
+<!-- Order Details Dialog -->
+<p-dialog
+  header="Order Details"
+  [(visible)]="showOrderDetails"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [dismissableMask]="true"
+>
+  @if (selectedOrder()) {
+    <div class="order-details">
+      <div class="detail-header">
+        <div class="order-info">
+          <h3>Order #{{ selectedOrder()!.id }}</h3>
+          <p-tag [value]="selectedOrder()!.status" [severity]="getStatusSeverity(selectedOrder()!.status)"></p-tag>
+        </div>
+        <span class="order-date">{{ formatDate(selectedOrder()!.createdAt) }}</span>
+      </div>
+
+      <div class="detail-section">
+        <h4>Items</h4>
+        @for (item of selectedOrder()!.items; track item.product.id) {
+          <div class="order-item">
+            <img [src]="item.product.productUrl" [alt]="item.product.title" />
+            <div class="item-info">
+              <span class="item-name">{{ item.product.title }}</span>
+              <span class="item-qty">Qty: {{ item.quantity }}</span>
+            </div>
+            <span class="item-price">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="detail-section">
+        <h4>Shipping Address</h4>
+        <p>{{ selectedOrder()!.shippingAddress }}</p>
+      </div>
+
+      <div class="detail-section">
+        <h4>Payment Method</h4>
+        <p>{{ selectedOrder()!.paymentMethod }}</p>
+      </div>
+
+      <div class="order-total">
+        <span>Total</span>
+        <span class="price">${{ selectedOrder()!.total.toFixed(2) }}</span>
+      </div>
+    </div>
+  }
+</p-dialog>

@@ -1,0 +1,133 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="categories-container">
+  <div class="page-header">
+    <div>
+      <h1>Categories Management</h1>
+      <p>Add, edit, and manage your product categories</p>
+    </div>
+    <p-button
+      label="Add Category"
+      icon="pi pi-plus"
+      styleClass="btn-tomato"
+      (onClick)="openAddDialog()"
+    ></p-button>
+  </div>
+
+  @if (pageLoading()) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+    </div>
+  } @else {
+  <p-card>
+    <p-table
+      [value]="productService.categories()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25]"
+      [tableStyle]="{ 'min-width': '40rem' }"
+      styleClass="p-datatable-striped"
+    >
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+          <th>Description</th>
+          <th pSortableColumn="productCount">Products <p-sortIcon field="productCount"></p-sortIcon></th>
+          <th pSortableColumn="createdAt">Created <p-sortIcon field="createdAt"></p-sortIcon></th>
+          <th style="width: 150px">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-category>
+        <tr>
+          <td>
+            <span class="category-name">{{ category.name }}</span>
+          </td>
+          <td>
+            <span class="category-desc">{{ category.description }}</span>
+          </td>
+          <td>
+            <p-tag [value]="category.productCount + ' products'" severity="info"></p-tag>
+          </td>
+          <td>{{ formatDate(category.createdAt) }}</td>
+          <td>
+            <div class="action-buttons">
+              <p-button
+                icon="pi pi-pencil"
+                [text]="true"
+                severity="info"
+                (onClick)="openEditDialog(category)"
+              ></p-button>
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+                (onClick)="confirmDelete(category)"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5" class="text-center p-4">
+            <div class="empty-state">
+              <i class="pi pi-tags"></i>
+              <p>No categories found. Click "Add Category" to create one.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+  }
+</div>
+
+<!-- Add/Edit Category Dialog -->
+<p-dialog
+  [header]="isEditing ? 'Edit Category' : 'Add Category'"
+  [(visible)]="showDialog"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [dismissableMask]="true"
+>
+  <form [formGroup]="categoryForm">
+    <div class="form-field">
+      <label for="name">Category Name</label>
+      <input
+        pInputText
+        id="name"
+        formControlName="name"
+        placeholder="Enter category name"
+        class="w-full"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="description">Description</label>
+      <textarea
+        pTextarea
+        id="description"
+        formControlName="description"
+        rows="3"
+        placeholder="Enter category description"
+        class="w-full"
+      ></textarea>
+    </div>
+  </form>
+
+  <ng-template #footer>
+    <p-button
+      label="Cancel"
+      [text]="true"
+      (onClick)="showDialog = false"
+    ></p-button>
+    <p-button
+      [label]="isEditing ? 'Update' : 'Add'"
+      icon="pi pi-check"
+      styleClass="btn-tomato"
+      [loading]="loading"
+      (onClick)="saveCategory()"
+    ></p-button>
+  </ng-template>
+</p-dialog>

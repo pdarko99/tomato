@@ -1,0 +1,228 @@
+.desktop-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--p-surface-card);
+  border-bottom: 1px solid var(--p-surface-border);
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.5rem;
+
+    .logo-icon {
+      color: var(--tomato-primary);
+      font-size: 1.75rem;
+    }
+
+    .logo-text {
+      color: var(--p-text-color);
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--p-text-secondary-color);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+      position: relative;
+
+      &:hover {
+        color: var(--p-text-color);
+        background: var(--p-surface-hover);
+      }
+
+      &.active {
+        color: var(--tomato-primary);
+        background: rgba(231, 76, 60, 0.1);
+      }
+
+      i {
+        font-size: 1rem;
+      }
+    }
+
+    .cart-link {
+      position: relative;
+
+      .cart-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+  }
+
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: var(--p-surface-hover);
+      }
+
+      .user-name {
+        font-weight: 500;
+      }
+
+      .pi-chevron-down {
+        font-size: 0.75rem;
+        color: var(--p-text-secondary-color);
+      }
+    }
+  }
+}
+
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--p-surface-card);
+  border-bottom: 1px solid var(--p-surface-border);
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.5rem;
+
+    .logo-icon {
+      color: var(--tomato-primary);
+      font-size: 1.75rem;
+    }
+
+    .logo-text {
+      color: var(--p-text-color);
+    }
+  }
+}
+
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: var(--bottom-nav-height);
+  background: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 9999;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+  padding-top: 8px;
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    color: #666666;
+    font-size: 0.7rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    position: relative;
+    text-decoration: none;
+
+    &:hover {
+      color: #333333;
+    }
+
+    &.active {
+      color: var(--tomato-primary);
+
+      i {
+        color: var(--tomato-primary);
+      }
+    }
+
+    i {
+      font-size: 1.4rem;
+      color: #666666;
+    }
+
+    span {
+      font-weight: 500;
+    }
+
+    &.cart-item {
+      position: relative;
+
+      .mobile-cart-badge {
+        position: absolute;
+        top: 0;
+        right: 0.25rem;
+        background: var(--tomato-primary);
+        color: white;
+        font-size: 0.6rem;
+        min-width: 16px;
+        height: 16px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Responsive utilities
+.hide-mobile {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.hide-desktop {
+  @media (min-width: 769px) {
+    display: none !important;
+  }
+}

@@ -1,0 +1,78 @@
+<div class="login-container">
+  <p-card class="login-card">
+    <div class="login-header">
+      <div class="logo">
+        <i class="pi pi-heart-fill"></i>
+        <span>TOMATO</span>
+      </div>
+      <h2>Welcome Back</h2>
+      <p>Sign in to continue shopping</p>
+    </div>
+
+    @if (errorMessage) {
+      <p-message severity="error" [text]="errorMessage" styleClass="w-full mb-3"></p-message>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          [class.ng-invalid]="email?.invalid && email?.touched"
+        />
+        @if (email?.invalid && email?.touched) {
+          <small class="p-error">
+            @if (email?.errors?.['required']) {
+              Email is required
+            } @else if (email?.errors?.['email']) {
+              Please enter a valid email
+            }
+          </small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          [toggleMask]="true"
+          [feedback]="false"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        ></p-password>
+        @if (password?.invalid && password?.touched) {
+          <small class="p-error">
+            @if (password?.errors?.['required']) {
+              Password is required
+            } @else if (password?.errors?.['minlength']) {
+              Password must be at least 4 characters
+            }
+          </small>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Sign In"
+        icon="pi pi-sign-in"
+        styleClass="w-full btn-tomato"
+        [loading]="loading"
+      ></p-button>
+    </form>
+
+    <div class="login-footer">
+      <p>Don't have an account? <a routerLink="/auth/register">Register</a></p>
+
+      <div class="demo-credentials">
+        <p><strong>Demo Credentials:</strong></p>
+        <p>Admin: admin&#64;tomato.com / Admin@123</p>
+        <p>User: user&#64;tomato.com / User@123</p>
+      </div>
+    </div>
+  </p-card>
+</div>

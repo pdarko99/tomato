@@ -1,0 +1,9 @@
+.main-content {
+  padding-top: var(--header-height);
+}
+
+.with-header {
+  @media (min-width: 769px) {
+    padding-top: var(--header-height);
+  }
+}

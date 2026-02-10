@@ -1,0 +1,194 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="products-container">
+  <div class="page-header">
+    <div>
+      <h1>Products Management</h1>
+      <p>Add, edit, and manage your product catalog</p>
+    </div>
+    <p-button
+      label="Add Product"
+      icon="pi pi-plus"
+      styleClass="btn-tomato"
+      (onClick)="openAddDialog()"
+    ></p-button>
+  </div>
+
+  @if (pageLoading()) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+    </div>
+  } @else {
+  <p-card>
+    <p-table
+      [value]="productService.products()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 25]"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      [globalFilterFields]="['title', 'description']"
+      styleClass="p-datatable-striped"
+    >
+      <ng-template #header>
+        <tr>
+          <th style="width: 80px">Image</th>
+          <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
+          <th>Category</th>
+          <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+          <th pSortableColumn="quantity">Stock <p-sortIcon field="quantity"></p-sortIcon></th>
+          <th style="width: 150px">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-product>
+        <tr>
+          <td>
+            <img [src]="product.productUrl" [alt]="product.title" class="product-thumbnail" />
+          </td>
+          <td>
+            <div class="product-info">
+              <span class="product-title">{{ product.title }}</span>
+              <span class="product-desc">{{ product.description }}</span>
+            </div>
+          </td>
+          <td>
+            <p-tag [value]="getCategoryName(product.categoryId)"></p-tag>
+          </td>
+          <td>
+            <span class="price">${{ product.price.toFixed(2) }}</span>
+          </td>
+          <td>
+            <span [class.low-stock]="product.quantity < 10">
+              {{ product.quantity }}
+              @if (product.quantity < 10) {
+                <i class="pi pi-exclamation-triangle"></i>
+              }
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <p-button
+                icon="pi pi-pencil"
+                [text]="true"
+                severity="info"
+                (onClick)="openEditDialog(product)"
+              ></p-button>
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+                (onClick)="confirmDelete(product)"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="6" class="text-center p-4">
+            <div class="empty-state">
+              <i class="pi pi-box"></i>
+              <p>No products found. Click "Add Product" to create one.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+  }
+</div>
+
+<!-- Add/Edit Product Dialog -->
+<p-dialog
+  [header]="isEditing ? 'Edit Product' : 'Add Product'"
+  [(visible)]="showDialog"
+  [modal]="true"
+  [style]="{ width: '550px' }"
+  [dismissableMask]="true"
+>
+  <form [formGroup]="productForm">
+    <div class="form-field">
+      <label for="title">Product Title</label>
+      <input
+        pInputText
+        id="title"
+        formControlName="title"
+        placeholder="Enter product title"
+        class="w-full"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="description">Description</label>
+      <textarea
+        pTextarea
+        id="description"
+        formControlName="description"
+        rows="3"
+        placeholder="Enter product description"
+        class="w-full"
+      ></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="categoryId">Category</label>
+      <p-select
+        id="categoryId"
+        formControlName="categoryId"
+        [options]="categoryOptions()"
+        placeholder="Select a category"
+        styleClass="w-full"
+      ></p-select>
+    </div>
+
+    <div class="form-field">
+      <label for="productUrl">Image URL</label>
+      <input
+        pInputText
+        id="productUrl"
+        formControlName="productUrl"
+        placeholder="https://example.com/image.jpg"
+        class="w-full"
+      />
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label for="price">Price ($)</label>
+        <p-inputNumber
+          id="price"
+          formControlName="price"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          styleClass="w-full"
+        ></p-inputNumber>
+      </div>
+
+      <div class="form-field">
+        <label for="quantity">Stock Quantity</label>
+        <p-inputNumber
+          id="quantity"
+          formControlName="quantity"
+          [min]="0"
+          styleClass="w-full"
+        ></p-inputNumber>
+      </div>
+    </div>
+  </form>
+
+  <ng-template #footer>
+    <p-button
+      label="Cancel"
+      [text]="true"
+      (onClick)="showDialog = false"
+    ></p-button>
+    <p-button
+      [label]="isEditing ? 'Update' : 'Add'"
+      icon="pi pi-check"
+      styleClass="btn-tomato"
+      [loading]="loading"
+      (onClick)="saveProduct()"
+    ></p-button>
+  </ng-template>
+</p-dialog>

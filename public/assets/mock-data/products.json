@@ -1,0 +1,134 @@
+[
+  {
+    "id": 1,
+    "title": "Wireless Bluetooth Headphones",
+    "description": "High-quality wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and professionals.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+    "price": 149.99,
+    "quantity": 50,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Smart Watch Pro",
+    "description": "Advanced smartwatch with health monitoring, GPS, and 7-day battery life. Water resistant up to 50m.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
+    "price": 299.99,
+    "quantity": 30,
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "updatedAt": "2024-01-02T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Premium Laptop Backpack",
+    "description": "Durable laptop backpack with USB charging port, anti-theft design, and water-resistant material. Fits up to 15.6 inch laptops.",
+    "categoryId": 2,
+    "productUrl": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
+    "price": 79.99,
+    "quantity": 100,
+    "createdAt": "2024-01-03T00:00:00.000Z",
+    "updatedAt": "2024-01-03T00:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "title": "Mechanical Gaming Keyboard",
+    "description": "RGB mechanical keyboard with Cherry MX switches, programmable keys, and aluminum frame. Perfect for gamers.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=400",
+    "price": 129.99,
+    "quantity": 45,
+    "createdAt": "2024-01-04T00:00:00.000Z",
+    "updatedAt": "2024-01-04T00:00:00.000Z"
+  },
+  {
+    "id": 5,
+    "title": "Portable Power Bank 20000mAh",
+    "description": "Fast charging power bank with 20000mAh capacity, dual USB ports, and LED display. Charge multiple devices simultaneously.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400",
+    "price": 49.99,
+    "quantity": 200,
+    "createdAt": "2024-01-05T00:00:00.000Z",
+    "updatedAt": "2024-01-05T00:00:00.000Z"
+  },
+  {
+    "id": 6,
+    "title": "Wireless Mouse",
+    "description": "Ergonomic wireless mouse with adjustable DPI, silent clicks, and long battery life. Compatible with Windows and Mac.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+    "price": 34.99,
+    "quantity": 150,
+    "createdAt": "2024-01-06T00:00:00.000Z",
+    "updatedAt": "2024-01-06T00:00:00.000Z"
+  },
+  {
+    "id": 7,
+    "title": "USB-C Hub Adapter",
+    "description": "7-in-1 USB-C hub with HDMI, USB 3.0 ports, SD card reader, and 100W power delivery. Essential for modern laptops.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400",
+    "price": 59.99,
+    "quantity": 80,
+    "createdAt": "2024-01-07T00:00:00.000Z",
+    "updatedAt": "2024-01-07T00:00:00.000Z"
+  },
+  {
+    "id": 8,
+    "title": "Minimalist Desk Lamp",
+    "description": "Modern LED desk lamp with adjustable brightness, color temperature, and wireless charging base. Eye-care technology included.",
+    "categoryId": 3,
+    "productUrl": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400",
+    "price": 69.99,
+    "quantity": 60,
+    "createdAt": "2024-01-08T00:00:00.000Z",
+    "updatedAt": "2024-01-08T00:00:00.000Z"
+  },
+  {
+    "id": 9,
+    "title": "Noise Cancelling Earbuds",
+    "description": "True wireless earbuds with active noise cancellation, 24-hour total battery life, and IPX4 water resistance.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400",
+    "price": 179.99,
+    "quantity": 75,
+    "createdAt": "2024-01-09T00:00:00.000Z",
+    "updatedAt": "2024-01-09T00:00:00.000Z"
+  },
+  {
+    "id": 10,
+    "title": "Leather Wallet",
+    "description": "Premium genuine leather wallet with RFID blocking technology, multiple card slots, and slim design.",
+    "categoryId": 2,
+    "productUrl": "https://images.unsplash.com/photo-1627123424574-724758594e93?w=400",
+    "price": 44.99,
+    "quantity": 120,
+    "createdAt": "2024-01-10T00:00:00.000Z",
+    "updatedAt": "2024-01-10T00:00:00.000Z"
+  },
+  {
+    "id": 11,
+    "title": "Webcam HD 1080p",
+    "description": "Full HD webcam with built-in microphone, auto-focus, and privacy cover. Perfect for video calls and streaming.",
+    "categoryId": 1,
+    "productUrl": "https://images.unsplash.com/photo-1587826080692-f439cd0b70da?w=400",
+    "price": 89.99,
+    "quantity": 55,
+    "createdAt": "2024-01-11T00:00:00.000Z",
+    "updatedAt": "2024-01-11T00:00:00.000Z"
+  },
+  {
+    "id": 12,
+    "title": "Stainless Steel Water Bottle",
+    "description": "Double-wall insulated water bottle that keeps drinks cold for 24 hours or hot for 12 hours. BPA-free and eco-friendly.",
+    "categoryId": 3,
+    "productUrl": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400",
+    "price": 29.99,
+    "quantity": 200,
+    "createdAt": "2024-01-12T00:00:00.000Z",
+    "updatedAt": "2024-01-12T00:00:00.000Z"
+  }
+]

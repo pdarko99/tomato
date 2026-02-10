@@ -1,0 +1,138 @@
+<p-toast></p-toast>
+
+<div class="home-container">
+  <div class="page-header">
+    <h1>Our Products</h1>
+    <p>Discover amazing products at great prices</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+    </div>
+  } @else {
+
+  <div class="filters-section">
+    <div class="search-box">
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search"></p-inputicon>
+        <input
+          pInputText
+          type="text"
+          placeholder="Search products..."
+          [value]="searchQuery()"
+          (input)="onSearch($event)"
+        />
+      </p-iconfield>
+    </div>
+
+    <div class="filter-controls">
+      <p-select
+        [options]="categoryOptions()"
+        [ngModel]="selectedCategory()"
+        (ngModelChange)="onCategoryChange($event)"
+        placeholder="All Categories"
+        styleClass="category-filter"
+      ></p-select>
+
+      <div class="layout-toggle">
+        <p-button
+          icon="pi pi-th-large"
+          [text]="true"
+          [severity]="layout === 'grid' ? 'primary' : 'secondary'"
+          (onClick)="layout = 'grid'"
+        ></p-button>
+        <p-button
+          icon="pi pi-list"
+          [text]="true"
+          [severity]="layout === 'list' ? 'primary' : 'secondary'"
+          (onClick)="layout = 'list'"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+
+  <p-dataView [value]="filteredProducts()" [layout]="layout">
+    <ng-template #header>
+      <div class="results-count">
+        {{ filteredProducts().length }} products found
+      </div>
+    </ng-template>
+
+    <ng-template #grid let-products>
+      <div class="product-grid">
+        @for (product of products; track product.id) {
+          <div class="product-card-wrapper">
+            <p-card class="product-card">
+              <ng-template #header>
+                <div class="product-image-wrapper">
+                  <img [src]="product.productUrl" [alt]="product.title" />
+                  <p-tag [value]="getCategoryName(product.categoryId)" styleClass="category-tag"></p-tag>
+                </div>
+              </ng-template>
+
+              <div class="product-info">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <p class="product-description">{{ product.description }}</p>
+                <div class="product-footer">
+                  <span class="price">${{ product.price.toFixed(2) }}</span>
+                  <p-button
+                    [icon]="isInCart(product.id) ? 'pi pi-check' : 'pi pi-shopping-cart'"
+                    [label]="isInCart(product.id) ? 'In Cart' : 'Add'"
+                    [severity]="isInCart(product.id) ? 'success' : 'primary'"
+                    styleClass="btn-tomato"
+                    (onClick)="addToCart(product)"
+                  ></p-button>
+                </div>
+              </div>
+            </p-card>
+          </div>
+        }
+      </div>
+    </ng-template>
+
+    <ng-template #list let-products>
+      <div class="product-list">
+        @for (product of products; track product.id) {
+          <div class="list-item">
+            <img [src]="product.productUrl" [alt]="product.title" class="list-image" />
+            <div class="list-content">
+              <div class="list-header">
+                <h3>{{ product.title }}</h3>
+                <p-tag [value]="getCategoryName(product.categoryId)"></p-tag>
+              </div>
+              <p class="list-description">{{ product.description }}</p>
+              <div class="list-footer">
+                <span class="price">${{ product.price.toFixed(2) }}</span>
+                <p-button
+                  [icon]="isInCart(product.id) ? 'pi pi-check' : 'pi pi-shopping-cart'"
+                  [label]="isInCart(product.id) ? 'In Cart' : 'Add to Cart'"
+                  [severity]="isInCart(product.id) ? 'success' : 'primary'"
+                  styleClass="btn-tomato"
+                  (onClick)="addToCart(product)"
+                ></p-button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </ng-template>
+
+    <ng-template #empty>
+      <div class="empty-state">
+        <i class="pi pi-search" style="font-size: 3rem; color: var(--p-text-secondary-color)"></i>
+        <h3>No products found</h3>
+        <p>Try adjusting your search or filter</p>
+      </div>
+    </ng-template>
+  </p-dataView>
+
+  @if (loadingMore()) {
+    <div class="loading-more">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s" [style]="{ width: '40px', height: '40px' }"></p-progressSpinner>
+      <span>Loading more products...</span>
+    </div>
+  }
+
+  }
+</div>
