@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, map, catchError, of } from 'rxjs';
+import { Observable, tap, map, catchError, of, timeout, TimeoutError } from 'rxjs';
 import { User, LoginRequest, RegisterRequest, LoginResponse, RegisterResponse } from '../models';
 import { environment } from '../config/environment';
 
@@ -37,6 +37,7 @@ export class AuthService {
 
   login(request: LoginRequest): Observable<{ success: boolean; message: string }> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, request).pipe(
+      timeout(15000),
       tap(response => {
         const user: User = {
           userId: response.userId,
@@ -53,7 +54,7 @@ export class AuthService {
       }),
       map(() => ({ success: true, message: 'Login successful!' })),
       catchError(error => {
-        const message = error.error?.message || error.error?.error || 'Invalid email or password';
+        const message = this.extractErrorMessage(error, 'Invalid email or password');
         return of({ success: false, message });
       })
     );
@@ -61,6 +62,7 @@ export class AuthService {
 
   register(request: RegisterRequest): Observable<{ success: boolean; message: string }> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, request).pipe(
+      timeout(15000),
       tap(response => {
         const user: User = {
           userId: response.userId,
@@ -77,10 +79,23 @@ export class AuthService {
       }),
       map(() => ({ success: true, message: 'Registration successful!' })),
       catchError(error => {
-        const message = error.error?.message || error.error?.error || 'Registration failed';
+        const message = this.extractErrorMessage(error, 'Registration failed');
         return of({ success: false, message });
       })
     );
+  }
+
+  private extractErrorMessage(error: any, fallback: string): string {
+    if (error instanceof TimeoutError) {
+      return 'Request timed out. Please check your connection and try again.';
+    }
+    if (error.status === 0) {
+      return 'Unable to connect to the server. Please check your connection.';
+    }
+    if (typeof error.error === 'string') {
+      return error.error;
+    }
+    return error.error?.message || error.error?.error || error.message || fallback;
   }
 
   logout(): void {

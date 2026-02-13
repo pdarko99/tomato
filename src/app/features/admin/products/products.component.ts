@@ -54,6 +54,7 @@ export class ProductsComponent implements OnInit {
   loading = false;
   pageLoading = signal(true);
   selectedFile: File | null = null;
+  imagePreview: string | null = null;
 
   categoryOptions = signal<{ label: string; value: number }[]>([]);
 
@@ -61,14 +62,25 @@ export class ProductsComponent implements OnInit {
     forkJoin([
       this.productService.fetchProducts(),
       this.productService.fetchCategories()
-    ]).subscribe(() => {
-      this.categoryOptions.set(
-        this.productService.categories().map(c => ({
-          label: c.name,
-          value: c.id
-        }))
-      );
-      this.pageLoading.set(false);
+    ]).subscribe({
+      next: () => {
+        this.categoryOptions.set(
+          this.productService.categories().map(c => ({
+            label: c.name,
+            value: c.id
+          }))
+        );
+        this.pageLoading.set(false);
+      },
+      error: () => {
+        this.pageLoading.set(false);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load data. Please refresh the page.',
+          life: 5000
+        });
+      }
     });
 
     this.initForm();
@@ -79,8 +91,8 @@ export class ProductsComponent implements OnInit {
       title: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
       categoryId: [null, [Validators.required]],
-      productUrl: ['', [Validators.required]],
-      price: [0, [Validators.required, Validators.min(0.01)]],
+      productUrl: [''],
+      amount: [0, [Validators.required, Validators.min(0.01)]],
       quantity: [0, [Validators.required, Validators.min(0)]]
     });
   }
@@ -88,21 +100,21 @@ export class ProductsComponent implements OnInit {
   openAddDialog(): void {
     this.isEditing = false;
     this.editingProductId = null;
-    this.selectedFile = null;
-    this.productForm.reset({ price: 0, quantity: 0 });
+    this.clearFile();
+    this.productForm.reset({ amount: 0, quantity: 0 });
     this.showDialog = true;
   }
 
   openEditDialog(product: Product): void {
     this.isEditing = true;
     this.editingProductId = product.id;
-    this.selectedFile = null;
+    this.clearFile();
     this.productForm.patchValue({
       title: product.title,
       description: product.description,
       categoryId: product.categoryId,
       productUrl: product.productUrl,
-      price: product.price,
+      amount: product.price,
       quantity: product.quantity
     });
     this.showDialog = true;
@@ -111,13 +123,47 @@ export class ProductsComponent implements OnInit {
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      this.selectedFile = input.files[0];
+      this.handleFile(input.files[0]);
     }
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    const file = event.dataTransfer?.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.handleFile(file);
+    }
+  }
+
+  removeFile(): void {
+    this.clearFile();
+  }
+
+  private handleFile(file: File): void {
+    this.selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = () => this.imagePreview = reader.result as string;
+    reader.readAsDataURL(file);
+  }
+
+  private clearFile(): void {
+    this.selectedFile = null;
+    this.imagePreview = null;
   }
 
   saveProduct(): void {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.isEditing && !this.selectedFile) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Image Required',
+        detail: 'Please select an image for the product',
+        life: 3000
+      });
       return;
     }
 
@@ -127,7 +173,7 @@ export class ProductsComponent implements OnInit {
     formData.append('title', formValues.title);
     formData.append('description', formValues.description);
     formData.append('categoryId', formValues.categoryId.toString());
-    formData.append('price', formValues.price.toString());
+    formData.append('amount', formValues.amount.toString());
     formData.append('quantity', formValues.quantity.toString());
 
     if (this.selectedFile) {
@@ -135,9 +181,12 @@ export class ProductsComponent implements OnInit {
     }
 
     if (this.isEditing && this.editingProductId) {
-      formData.append('id', this.editingProductId.toString());
+      formData.append('productId', this.editingProductId.toString());
+      formData.append('price', formValues.amount.toString());
+
       this.productService.updateProduct(formData).subscribe({
         next: (updated) => {
+          this.loading = false;
           if (updated) {
             this.messageService.add({
               severity: 'success',
@@ -145,17 +194,30 @@ export class ProductsComponent implements OnInit {
               detail: 'Product updated successfully',
               life: 3000
             });
+            this.showDialog = false;
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to update product. Please try again.',
+              life: 4000
+            });
           }
-          this.showDialog = false;
-          this.loading = false;
         },
         error: () => {
           this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update product. Please try again.',
+            life: 4000
+          });
         }
       });
     } else {
       this.productService.createProduct(formData).subscribe({
         next: (created) => {
+          this.loading = false;
           if (created) {
             this.messageService.add({
               severity: 'success',
@@ -163,12 +225,24 @@ export class ProductsComponent implements OnInit {
               detail: 'Product added successfully',
               life: 3000
             });
+            this.showDialog = false;
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to add product. Please try again.',
+              life: 4000
+            });
           }
-          this.showDialog = false;
-          this.loading = false;
         },
         error: () => {
           this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to add product. Please try again.',
+            life: 4000
+          });
         }
       });
     }
@@ -181,13 +255,30 @@ export class ProductsComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.productService.deleteProduct(product.id).subscribe(deleted => {
-          if (deleted) {
+        this.productService.deleteProduct(product.id).subscribe({
+          next: (deleted) => {
+            if (deleted) {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Deleted',
+                detail: 'Product deleted successfully',
+                life: 3000
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to delete product.',
+                life: 4000
+              });
+            }
+          },
+          error: () => {
             this.messageService.add({
-              severity: 'success',
-              summary: 'Deleted',
-              detail: 'Product deleted successfully',
-              life: 3000
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete product.',
+              life: 4000
             });
           }
         });

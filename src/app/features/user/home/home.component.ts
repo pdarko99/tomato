@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   displayedProducts = signal<Product[]>([]);
   categories = this.productService.categories;
   private currentPage = 0;
-  private readonly pageSize = 10;
+  private readonly pageSize = 5;
 
   categoryOptions = computed(() => [
     { label: 'All Categories', value: null },
@@ -109,15 +109,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.productService.searchProducts(this.currentPage, this.pageSize, this.searchQuery() || undefined)
-      .subscribe(products => {
-        if (initial) {
-          this.displayedProducts.set(products);
+      .subscribe({
+        next: (products) => {
+          if (initial) {
+            this.displayedProducts.set(products);
+            this.loading.set(false);
+          } else {
+            this.displayedProducts.update(current => [...current, ...products]);
+            this.loadingMore.set(false);
+          }
+          this.hasMore.set(products.length >= this.pageSize);
+        },
+        error: () => {
           this.loading.set(false);
-        } else {
-          this.displayedProducts.update(current => [...current, ...products]);
           this.loadingMore.set(false);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load products. Please try again.',
+            life: 5000
+          });
         }
-        this.hasMore.set(products.length >= this.pageSize);
       });
   }
 

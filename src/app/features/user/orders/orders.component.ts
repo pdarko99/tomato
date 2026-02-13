@@ -6,6 +6,8 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { Order, OrderStatus } from '../../../core/models';
 import { OrderService } from '../../../core/services';
 
@@ -19,23 +21,39 @@ import { OrderService } from '../../../core/services';
     TagModule,
     ButtonModule,
     DialogModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
 export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
+  private messageService = inject(MessageService);
 
   orders = signal<Order[]>([]);
   selectedOrder = signal<Order | null>(null);
   showOrderDetails = false;
   loading = signal(true);
+  loadError = signal(false);
 
   ngOnInit(): void {
-    this.orderService.getUserOrders().subscribe(orders => {
-      this.orders.set(orders);
-      this.loading.set(false);
+    this.orderService.getUserOrders().subscribe({
+      next: (orders) => {
+        this.orders.set(orders);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set(true);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load orders. Please try again.',
+          life: 5000
+        });
+      }
     });
   }
 

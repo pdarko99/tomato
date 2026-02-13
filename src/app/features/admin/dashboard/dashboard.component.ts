@@ -5,6 +5,8 @@ import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { DashboardService } from '../../../core/services';
 import { RecentOrderResponse, OrderStatus } from '../../../core/models';
 
@@ -17,22 +19,26 @@ import { RecentOrderResponse, OrderStatus } from '../../../core/models';
     ChartModule,
     TableModule,
     TagModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
+  private messageService = inject(MessageService);
 
   stats = signal({
     totalProducts: 0,
     totalOrders: 0,
     totalRevenue: 0,
-    pendingOrders: 0
+    todayOrders: 0
   });
 
   loading = signal(true);
+  loadError = signal(false);
   recentOrders = signal<RecentOrderResponse[]>([]);
 
   salesChartData: any;
@@ -41,19 +47,41 @@ export class DashboardComponent implements OnInit {
   categoryChartOptions: any;
 
   ngOnInit(): void {
-    this.dashboardService.getDashboard().subscribe(dashboard => {
-      if (!dashboard) return;
+    this.dashboardService.getDashboard().subscribe({
+      next: (dashboard) => {
+        if (!dashboard) {
+          this.loading.set(false);
+          this.loadError.set(true);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load dashboard data.',
+            life: 5000
+          });
+          return;
+        }
 
-      this.stats.set({
-        totalProducts: dashboard.overview.totalProducts,
-        totalOrders: dashboard.overview.totalOrders,
-        totalRevenue: dashboard.overview.totalRevenue,
-        pendingOrders: dashboard.overview.todayOrders
-      });
+        this.stats.set({
+          totalProducts: dashboard.overview.totalProducts,
+          totalOrders: dashboard.overview.totalOrders,
+          totalRevenue: dashboard.overview.totalRevenue,
+          todayOrders: dashboard.overview.todayOrders
+        });
 
-      this.recentOrders.set(dashboard.recentOrders || []);
-      this.initCharts(dashboard);
-      this.loading.set(false);
+        this.recentOrders.set(dashboard.recentOrders || []);
+        this.initCharts(dashboard);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set(true);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load dashboard data.',
+          life: 5000
+        });
+      }
     });
   }
 

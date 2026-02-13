@@ -104,3 +104,122 @@
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
+.upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+  border: 2px dashed var(--p-content-border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+
+  &:hover {
+    border-color: var(--tomato-primary);
+    background-color: rgba(231, 76, 60, 0.04);
+  }
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: var(--p-text-secondary-color);
+}
+
+.upload-text {
+  font-size: 0.925rem;
+  font-weight: 500;
+  color: var(--p-text-color);
+}
+
+.upload-hint {
+  font-size: 0.8rem;
+  color: var(--p-text-secondary-color);
+}
+
+.image-preview-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 12px;
+  background: var(--p-surface-50);
+}
+
+.preview-img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.preview-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--p-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview-size {
+  font-size: 0.8rem;
+  color: var(--p-text-secondary-color);
+}
+
+.preview-change {
+  background: none;
+  border: none;
+  color: var(--tomato-primary);
+  font-size: 0.825rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.15rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+.preview-remove {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--p-surface-200);
+  color: var(--p-text-secondary-color);
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--p-red-500);
+    color: #fff;
+  }
+}

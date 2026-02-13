@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
+import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/services';
 
 @Component({
@@ -32,7 +33,7 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
   errorMessage = '';
-  loading = false;
+  loading = signal(false);
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -47,21 +48,32 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.loading.set(true);
     this.errorMessage = '';
 
     const { email, password } = this.loginForm.value;
-    this.authService.login({ email, password }).subscribe(result => {
-      if (result.success) {
-        if (this.authService.isAdmin()) {
-          this.router.navigate(['/admin/dashboard']);
+    this.authService.login({ email, password }).pipe(
+      finalize(() => this.loading.set(false))
+    ).subscribe({
+      next: (result) => {
+        console.log("here");
+        console.log(result);
+        if (result.success) {
+          if (this.authService.isAdmin()) {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate(['/home']);
+          }
         } else {
-          this.router.navigate(['/home']);
+          this.errorMessage = result.message;
+          console.log("object");
+          this.loading.set(false);
         }
-      } else {
-        this.errorMessage = result.message;
+      },
+      error: () => {
+        console.log("here2");
+        this.errorMessage = 'Something went wrong. Please try again.';
       }
-      this.loading = false;
     });
   }
 

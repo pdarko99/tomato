@@ -50,7 +50,18 @@ export class CategoriesComponent implements OnInit {
   pageLoading = signal(true);
 
   ngOnInit(): void {
-    this.productService.fetchCategories().subscribe(() => this.pageLoading.set(false));
+    this.productService.fetchCategories().subscribe({
+      next: () => this.pageLoading.set(false),
+      error: () => {
+        this.pageLoading.set(false);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load categories.',
+          life: 5000
+        });
+      }
+    });
     this.initForm();
   }
 
@@ -90,6 +101,7 @@ export class CategoriesComponent implements OnInit {
     if (this.isEditing && this.editingCategoryId) {
       this.productService.updateCategory(this.editingCategoryId, formValues).subscribe({
         next: (updated) => {
+          this.loading = false;
           if (updated) {
             this.messageService.add({
               severity: 'success',
@@ -97,17 +109,30 @@ export class CategoriesComponent implements OnInit {
               detail: 'Category updated successfully',
               life: 3000
             });
+            this.showDialog = false;
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to update category. Please try again.',
+              life: 4000
+            });
           }
-          this.showDialog = false;
-          this.loading = false;
         },
         error: () => {
           this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to update category. Please try again.',
+            life: 4000
+          });
         }
       });
     } else {
       this.productService.createCategory(formValues).subscribe({
         next: (created) => {
+          this.loading = false;
           if (created) {
             this.messageService.add({
               severity: 'success',
@@ -115,12 +140,24 @@ export class CategoriesComponent implements OnInit {
               detail: 'Category added successfully',
               life: 3000
             });
+            this.showDialog = false;
+          } else {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to add category. Please try again.',
+              life: 4000
+            });
           }
-          this.showDialog = false;
-          this.loading = false;
         },
         error: () => {
           this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to add category. Please try again.',
+            life: 4000
+          });
         }
       });
     }
@@ -133,13 +170,30 @@ export class CategoriesComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.productService.deleteCategory(category.id).subscribe(deleted => {
-          if (deleted) {
+        this.productService.deleteCategory(category.id).subscribe({
+          next: (deleted) => {
+            if (deleted) {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Deleted',
+                detail: 'Category deleted successfully',
+                life: 3000
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to delete category.',
+                life: 4000
+              });
+            }
+          },
+          error: () => {
             this.messageService.add({
-              severity: 'success',
-              summary: 'Deleted',
-              detail: 'Category deleted successfully',
-              life: 3000
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete category.',
+              life: 4000
             });
           }
         });

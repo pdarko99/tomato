@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
+import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/services';
 
 @Component({
@@ -65,13 +66,19 @@ export class RegisterComponent implements OnInit {
       email,
       password,
       confirmPassword
-    }).subscribe(result => {
-      if (result.success) {
-        this.router.navigate(['/home']);
-      } else {
-        this.errorMessage = result.message;
+    }).pipe(
+      finalize(() => this.loading = false)
+    ).subscribe({
+      next: (result) => {
+        if (result.success) {
+          this.router.navigate(['/home']);
+        } else {
+          this.errorMessage = result.message;
+        }
+      },
+      error: () => {
+        this.errorMessage = 'Something went wrong. Please try again.';
       }
-      this.loading = false;
     });
   }
 

@@ -68,6 +68,11 @@
                 <div class="product-image-wrapper">
                   <img [src]="product.productUrl" [alt]="product.title" />
                   <p-tag [value]="getCategoryName(product.categoryId)" styleClass="category-tag"></p-tag>
+                  @if (!product.inStock) {
+                    <div class="out-of-stock-overlay">
+                      <span>Out of Stock</span>
+                    </div>
+                  }
                 </div>
               </ng-template>
 
@@ -75,12 +80,24 @@
                 <h3 class="product-title">{{ product.title }}</h3>
                 <p class="product-description">{{ product.description }}</p>
                 <div class="product-footer">
-                  <span class="price">${{ product.price.toFixed(2) }}</span>
+                  <div class="price-stock">
+                    <span class="price">${{ product.price.toFixed(2) }}</span>
+                    @if (product.inStock) {
+                      <span class="stock-badge in-stock">
+                        <i class="pi pi-check-circle"></i> In Stock
+                      </span>
+                    } @else {
+                      <span class="stock-badge out-of-stock">
+                        <i class="pi pi-times-circle"></i> Out of Stock
+                      </span>
+                    }
+                  </div>
                   <p-button
                     [icon]="isInCart(product.id) ? 'pi pi-check' : 'pi pi-shopping-cart'"
                     [label]="isInCart(product.id) ? 'In Cart' : 'Add'"
                     [severity]="isInCart(product.id) ? 'success' : 'primary'"
-                    styleClass="btn-tomato"
+                    [styleClass]="product.inStock ? 'btn-tomato' : ''"
+                    [disabled]="!product.inStock"
                     (onClick)="addToCart(product)"
                   ></p-button>
                 </div>
@@ -95,7 +112,14 @@
       <div class="product-list">
         @for (product of products; track product.id) {
           <div class="list-item">
-            <img [src]="product.productUrl" [alt]="product.title" class="list-image" />
+            <div class="list-image-wrapper">
+              <img [src]="product.productUrl" [alt]="product.title" class="list-image" />
+              @if (!product.inStock) {
+                <div class="out-of-stock-overlay">
+                  <span>Out of Stock</span>
+                </div>
+              }
+            </div>
             <div class="list-content">
               <div class="list-header">
                 <h3>{{ product.title }}</h3>
@@ -103,12 +127,24 @@
               </div>
               <p class="list-description">{{ product.description }}</p>
               <div class="list-footer">
-                <span class="price">${{ product.price.toFixed(2) }}</span>
+                <div class="price-stock">
+                  <span class="price">${{ product.price.toFixed(2) }}</span>
+                  @if (product.inStock) {
+                    <span class="stock-badge in-stock">
+                      <i class="pi pi-check-circle"></i> In Stock
+                    </span>
+                  } @else {
+                    <span class="stock-badge out-of-stock">
+                      <i class="pi pi-times-circle"></i> Out of Stock
+                    </span>
+                  }
+                </div>
                 <p-button
                   [icon]="isInCart(product.id) ? 'pi pi-check' : 'pi pi-shopping-cart'"
                   [label]="isInCart(product.id) ? 'In Cart' : 'Add to Cart'"
                   [severity]="isInCart(product.id) ? 'success' : 'primary'"
-                  styleClass="btn-tomato"
+                  [styleClass]="product.inStock ? 'btn-tomato' : ''"
+                  [disabled]="!product.inStock"
                   (onClick)="addToCart(product)"
                 ></p-button>
               </div>
