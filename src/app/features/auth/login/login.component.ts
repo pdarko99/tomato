@@ -56,8 +56,6 @@ export class LoginComponent implements OnInit {
       finalize(() => this.loading.set(false))
     ).subscribe({
       next: (result) => {
-        console.log("here");
-        console.log(result);
         if (result.success) {
           if (this.authService.isAdmin()) {
             this.router.navigate(['/admin/dashboard']);
@@ -66,7 +64,6 @@ export class LoginComponent implements OnInit {
           }
         } else {
           this.errorMessage = result.message;
-          console.log("object");
           this.loading.set(false);
         }
       },

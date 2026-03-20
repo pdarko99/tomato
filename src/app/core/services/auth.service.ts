@@ -37,7 +37,6 @@ export class AuthService {
 
   login(request: LoginRequest): Observable<{ success: boolean; message: string }> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, request).pipe(
-      timeout(15000),
       tap(response => {
         const user: User = {
           userId: response.userId,
@@ -62,7 +61,6 @@ export class AuthService {
 
   register(request: RegisterRequest): Observable<{ success: boolean; message: string }> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, request).pipe(
-      timeout(15000),
       tap(response => {
         const user: User = {
           userId: response.userId,
